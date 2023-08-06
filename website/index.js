@@ -21,18 +21,30 @@ function plot(x, y) {
     ctx.stroke();
 }
 
-// main
-init().then(() => {
-    let t = [];
-    let p = [];
-    let pwr = new ReactorPWR(1e-3, -1000);
-    for (let i = 0; i < 100; i++) {
-        t.push(pwr.time);
-        p.push(pwr.get_datas()[0]);
-        pwr.step_euler();
-    }
-    // t = [1,2,3,4,5];
-    // p = [4,5,6,3,2];
-    console.log(p);
+let reactor;
+let t = [];
+let p = [];
+
+let frame = 0;
+function loop(){
+    t.push(reactor.time);
+    p.push(reactor.get_datas()[0]);
+    reactor.step_euler();
     plot(t,p);
+
+    frame += 1;
+    if (frame > 100) {
+        console.log(p);
+    } else {
+        requestAnimationFrame(loop);
+    }
+}
+
+// main
+const dt = 1e-3;
+const reactivity = -1000;
+init().then(() => {
+    reactor = new ReactorPWR(dt, reactivity);
+    loop();
 });
+
