@@ -57,7 +57,7 @@ impl ops::Mul<ReactorPWRData> for f64 {
 #[wasm_bindgen]
 pub struct ReactorPWR {
     data: ReactorPWRData,
-    time: f64,
+    pub time: f64,
     dt: f64,
     // neutronic
     beta: [f64; 6],
@@ -76,20 +76,20 @@ pub struct ReactorPWR {
 impl ReactorPWR {
     // initialize
     #[wasm_bindgen(constructor)]
-    pub fn new() -> Self {
+    pub fn new(dt : f64, excess_reactivity : f64) -> Self {
         // for now, hardcode the value
         let beta = [0.000215, 0.001424, 0.001274, 0.002568, 0.000748, 0.000273];
         let lambda = [0.0124, 0.0305, 0.111, 0.301, 1.14, 3.01];
         let time = 0.0;
-        let dt   = 1e-3;
+        // let dt   = 1e-3;
         let Lambda = lambda.iter().sum();
         let Beta = beta.iter().sum();
-        let excess_reactivity = 0.0;
+        // let excess_reactivity = 0.0;
         let external_reactivity = 0.0;
         let alpha_fuel = 0.0;
         let alpha_coolant = 0.0;
         let data = ReactorPWRData {
-            neutron: 1e8,
+            neutron: 1e2,
             precursors: [0.0; 6],
             reactivity: 0.0,
             temp_fuel: 0.0,
@@ -118,7 +118,6 @@ impl ReactorPWR {
         let reactivity = self.excess_reactivity + self.external_reactivity +
             self.alpha_fuel * d.temp_fuel + self.alpha_coolant * d.temp_coolant;
         let sum_lambdaC : f64 = self.lambda.iter().zip(d.precursors.iter()).map(|(x,y)| x*y).sum();
-        let Dneutron = (reactivity - self.Beta)/self.Lambda + sum_lambdaC;
         let Dneutron = (reactivity - self.Beta)/self.Lambda * d.neutron + sum_lambdaC;
         let mut Dprecursors = [0.0; 6];
         for i in 0..6 {
@@ -146,3 +145,4 @@ impl ReactorPWR {
         self.time += self.dt;
     }
 }
+

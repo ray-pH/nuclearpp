@@ -2,14 +2,22 @@
 <html lang="en-US">
     <head>
         <meta charset="utf-8" />
-        <title>hello-wasm example</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="#111111">
+        <title>NuclearPP</title>
+
+        <!-- <link rel="shortcut icon" href="./favicon.ico?" type="image/x-icon"> -->
+        <!-- <link rel="icon" href="./favicon.ico?" type="image/x-icon"> -->
+        <!-- <link rel="stylesheet" href="./style.css"> -->
+
+        <!-- <meta property="og:image" content="https://raw.githubusercontent.com/ray-pH/pixelPhysics/main/img/pxpy.png"/> -->
+        <!-- <meta property="og:description" content="Grid Based Physics Simulation"/> -->
+        <!-- <meta property="og:url"content="https://ray-ph.github.io/pixelPhysics"/> -->
+        <!-- <meta property="og:title" content="PixelPhysics"> -->
+
+        <script type="module" src="./index.js"></script>
     </head>
     <body>
-        <script type="module">
-            import init, { add } from "../pkg/nuclearpp.js";
-            init().then(() => {
-                console.log(add(1,2));
-            });
-        </script>
+        <canvas class="plotcanvas" id="canvas" width="400px" height="400px"></canvas>
     </body>
 </html>
