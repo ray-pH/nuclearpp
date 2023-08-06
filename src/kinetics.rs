@@ -119,6 +119,7 @@ impl ReactorPWR {
             self.alpha_fuel * d.temp_fuel + self.alpha_coolant * d.temp_coolant;
         let sum_lambdaC : f64 = self.lambda.iter().zip(d.precursors.iter()).map(|(x,y)| x*y).sum();
         let Dneutron = (reactivity - self.Beta)/self.Lambda + sum_lambdaC;
+        let Dneutron = (reactivity - self.Beta)/self.Lambda * d.neutron + sum_lambdaC;
         let mut Dprecursors = [0.0; 6];
         for i in 0..6 {
             Dprecursors[i] = self.beta[i]/self.Lambda * d.neutron - self.lambda[i] * d.precursors[i];
@@ -145,4 +146,3 @@ impl ReactorPWR {
         self.time += self.dt;
     }
 }
-
