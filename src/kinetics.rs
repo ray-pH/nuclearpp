@@ -1,12 +1,57 @@
+#![allow(non_snake_case)]
 use wasm_bindgen::prelude::*;
+use std::ops;
 
 #[wasm_bindgen]
+#[derive(Clone, Copy)]
 pub struct ReactorPWRData {
     pub neutron: f64,
     precursors: [f64; 6],
     pub reactivity: f64,
     pub temp_fuel: f64,
     pub temp_coolant: f64,
+}
+
+// implement ops::Add for ReactorPWRData
+impl ops::Add for ReactorPWRData {
+    type Output = Self;
+    fn add(self, rhs: Self) -> Self {
+        let mut precursors = [0.0; 6];
+        for i in 0..6 {
+            precursors[i] = self.precursors[i] + rhs.precursors[i];
+        }
+        ReactorPWRData {
+            neutron: self.neutron + rhs.neutron,
+            precursors,
+            reactivity: self.reactivity + rhs.reactivity,
+            temp_fuel: self.temp_fuel + rhs.temp_fuel,
+            temp_coolant: self.temp_coolant + rhs.temp_coolant,
+        }
+    }
+}
+
+// operator overloading scale ReactorPWRData with some float
+impl ops::Mul<f64> for ReactorPWRData {
+    type Output = Self;
+    fn mul(self, scale: f64) -> Self {
+        let mut precursors = [0.0; 6];
+        for i in 0..6 {
+            precursors[i] = self.precursors[i] * scale;
+        }
+        ReactorPWRData {
+            neutron: self.neutron * scale,
+            precursors,
+            reactivity: self.reactivity * scale,
+            temp_fuel: self.temp_fuel * scale,
+            temp_coolant: self.temp_coolant * scale,
+        }
+    }
+}
+impl ops::Mul<ReactorPWRData> for f64 {
+    type Output = ReactorPWRData;
+    fn mul(self, rhs: ReactorPWRData) -> ReactorPWRData {
+        rhs * self
+    }
 }
 
 #[wasm_bindgen]
@@ -34,9 +79,9 @@ impl ReactorPWR {
         // differential equations
         let reactivity = self.excess_reactivity + self.external_reactivity +
             self.alpha_fuel * d.temp_fuel + self.alpha_coolant * d.temp_coolant;
-        let sum_lambdaC = d.lambda.iter().zip(d.precursors.iter()).map(|(x,y)| x*y).sum();
+        let sum_lambdaC : f64 = self.lambda.iter().zip(d.precursors.iter()).map(|(x,y)| x*y).sum();
         let Dneutron = (reactivity - self.Beta)/self.Lambda + sum_lambdaC;
-        let Dprecursors = [0.0; 6];
+        let mut Dprecursors = [0.0; 6];
         for i in 0..6 {
             Dprecursors[i] = self.beta[i]/self.Lambda * d.neutron - self.lambda[i] * d.precursors[i];
         }
@@ -49,9 +94,10 @@ impl ReactorPWR {
         };
     }
 
-    pub fn calc_step_euler(&self, d : ReactorPWRData) -> ReactorPWRData {
+    pub fn calc_step_euler(&self, d : ReactorPWRData, dt : f64) -> ReactorPWRData {
         // solve using euler's method
         let ddata = self.calc_diff(d);
+        return d + ddata * dt;
     }
 }
 
