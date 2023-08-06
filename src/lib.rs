@@ -1,1 +1,2 @@
 mod kinetics;
+mod solver;
