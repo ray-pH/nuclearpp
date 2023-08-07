@@ -5,7 +5,7 @@ use std::ops;
 #[wasm_bindgen]
 #[derive(Clone, Copy)]
 pub struct ReactorPWRData {
-    pub neutron: f64,
+    pub power: f64,
     precursors: [f64; 6],
     pub reactivity: f64,
     pub temp_fuel: f64,
@@ -21,7 +21,7 @@ impl ops::Add for ReactorPWRData {
             precursors[i] = self.precursors[i] + rhs.precursors[i];
         }
         ReactorPWRData {
-            neutron: self.neutron + rhs.neutron,
+            power: self.power + rhs.power,
             precursors,
             reactivity: self.reactivity + rhs.reactivity,
             temp_fuel: self.temp_fuel + rhs.temp_fuel,
@@ -39,7 +39,7 @@ impl ops::Mul<f64> for ReactorPWRData {
             precursors[i] = self.precursors[i] * scale;
         }
         ReactorPWRData {
-            neutron: self.neutron * scale,
+            power: self.power * scale,
             precursors,
             reactivity: self.reactivity * scale,
             temp_fuel: self.temp_fuel * scale,
@@ -97,7 +97,7 @@ impl ReactorPWR {
         let Beta = beta.iter().sum();
         let external_reactivity = 0.0;
         let data = ReactorPWRData {
-            neutron: 1e2,
+            power: 1e2,
             precursors: [0.0; 6],
             reactivity: 0.0,
             temp_fuel: 0.0,
@@ -120,7 +120,7 @@ impl ReactorPWR {
 
     pub fn get_datas(&self) -> Vec<f64> {
         let mut datas = Vec::new();
-        datas.push(self.data.neutron);
+        datas.push(self.data.power);
         datas.extend_from_slice(&self.data.precursors);
         datas.push(self.data.reactivity);
         datas.push(self.data.temp_fuel);
@@ -133,13 +133,13 @@ impl ReactorPWR {
         // differential equations
         // TODO : termperature
         let sum_lambdaC : f64 = self.lambda.iter().zip(d.precursors.iter()).map(|(x,y)| x*y).sum();
-        let Dneutron = (d.reactivity - self.Beta)/self.Lambda * d.neutron + sum_lambdaC;
+        let Dpower = (d.reactivity - self.Beta)/self.Lambda * d.power + sum_lambdaC;
         let mut Dprecursors = [0.0; 6];
         for i in 0..6 {
-            Dprecursors[i] = self.beta[i]/self.Lambda * d.neutron - self.lambda[i] * d.precursors[i];
+            Dprecursors[i] = self.beta[i]/self.Lambda * d.power - self.lambda[i] * d.precursors[i];
         }
         return ReactorPWRData {
-            neutron: Dneutron,
+            power: Dpower,
             precursors: Dprecursors,
             reactivity: 0.0,
             temp_fuel: 0.0,
