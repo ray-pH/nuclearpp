@@ -75,7 +75,7 @@ pub struct ReactorPWR {
     heat_capacity_fuel : f64,
     mass_coolant : f64,
     heat_capacity_coolant : f64,
-    convective_heat_transfer_coefficient : f64,
+    fuel_coolant_heat_transfer_coefficient : f64,
     coolant_inlet_temperature : f64,
     coolant_mass_flow_rate : f64,
 }
@@ -103,14 +103,14 @@ impl ReactorPWR {
             temp_fuel: 0.0,
             temp_coolant: 0.0,
         };
-        let convective_heat_transfer_coefficient = 0.0;
+        let fuel_coolant_heat_transfer_coefficient = 0.0;
         let coolant_inlet_temperature = 0.0;
         let coolant_mass_flow_rate = 0.0;
         ReactorPWR {
             data, time, dt, beta, Beta, lambda, Lambda,
             excess_reactivity, external_reactivity, alpha_fuel, alpha_coolant,
             mass_fuel, heat_capacity_fuel, mass_coolant, heat_capacity_coolant,
-            convective_heat_transfer_coefficient, coolant_inlet_temperature, coolant_mass_flow_rate,
+            fuel_coolant_heat_transfer_coefficient, coolant_inlet_temperature, coolant_mass_flow_rate,
         }
     }
 
@@ -138,12 +138,16 @@ impl ReactorPWR {
         for i in 0..6 {
             Dprecursors[i] = self.beta[i]/self.Lambda * d.power - self.lambda[i] * d.precursors[i];
         }
+        let h = self.fuel_coolant_heat_transfer_coefficient;
+        let Dtempf = (d.power  - h*(d.temp_fuel - d.temp_coolant)) / (self.mass_fuel * self.heat_capacity_fuel);
+        let Dtempc = (h*(d.temp_fuel - d.temp_coolant) 
+            - 2.0*self.coolant_mass_flow_rate * self.heat_capacity_coolant * (d.temp_coolant - self.coolant_inlet_temperature)) / (self.mass_coolant * self.heat_capacity_coolant);
         return ReactorPWRData {
             power: Dpower,
             precursors: Dprecursors,
             reactivity: 0.0,
-            temp_fuel: 0.0,
-            temp_coolant: 0.0,
+            temp_fuel: Dtempf,
+            temp_coolant: Dtempc,
         };
     }
 
