@@ -62,8 +62,16 @@ const dt = 1e-3;
 const excess_reactivity = 0.0;
 const alpha_fuel = 0.0;
 const alpha_coolant = 0.0;
+const mass_fuel = 1.0e5; // kg
+const mass_coolant = 1.0e5; // kg
+const heat_capacity_fuel = 3.0e5; // J/kg-C
+const heat_capacity_coolant = 4182.0; // J/kg-C
 init().then(() => {
-    reactor = new ReactorPWR(dt, excess_reactivity, alpha_fuel, alpha_coolant);
+    reactor = new ReactorPWR(dt, excess_reactivity, 
+        alpha_fuel, alpha_coolant,
+        mass_fuel, mass_coolant,
+        heat_capacity_fuel, heat_capacity_coolant,
+    );
     loop();
 });
 
