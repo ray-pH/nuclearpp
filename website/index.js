@@ -3,6 +3,7 @@ import init, { ReactorPWR, ReactorPWRData } from "../pkg/nuclearpp.js";
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const extreactivity_slider = document.getElementById('ext_reactivitySlider');
+const button_pause = document.getElementById('pauseButton');
 const span_extreactivity = document.getElementById('ext_reactivityValue');
 const span_reactiviry = document.getElementById('reactivityValue');
 const span_power = document.getElementById('powerValue');
@@ -29,43 +30,43 @@ function plot(x, y) {
 let reactor;
 let t = [];
 let p = [];
+let paused = false;
 
 let ext_reactivity = 0;
 
-let frame = 0;
+button_pause.addEventListener('click', () => {
+    paused = !paused;
+});
+
 function loop(){
-    // update ext_reactivity from slider
-    let slider_value = extreactivity_slider.value;
-    if (slider_value != ext_reactivity) {
-        ext_reactivity = slider_value;
-        reactor.set_external_reactivity(ext_reactivity);
-    }
-    // update the text
-    //struct ReactorPWRData {
-    //     0   : power,
-    //     1:6 : precursors,
-    //     7   : reactivity,
-    //     8   : temp_fuel,
-    //     9   : temp_coolant,
-    // }
-    span_power.innerHTML = reactor.get_datas()[0];
-    span_Tfuel.innerHTML = reactor.get_datas()[8];
-    span_extreactivity.innerHTML = ext_reactivity;
-    span_reactiviry.innerHTML = reactor.get_datas()[7];
+    if (!paused){
+        // update ext_reactivity from slider
+        let slider_value = extreactivity_slider.value;
+        if (slider_value != ext_reactivity) {
+            ext_reactivity = slider_value;
+            reactor.set_external_reactivity(ext_reactivity);
+        }
+        // update the text
+        //struct ReactorPWRData {
+        //     0   : power,
+        //     1:6 : precursors,
+        //     7   : reactivity,
+        //     8   : temp_fuel,
+        //     9   : temp_coolant,
+        // }
+        span_power.innerHTML = reactor.get_datas()[0];
+        span_Tfuel.innerHTML = reactor.get_datas()[8];
+        span_extreactivity.innerHTML = ext_reactivity;
+        span_reactiviry.innerHTML = reactor.get_datas()[7];
 
-    // ---
-    t.push(reactor.time);
-    p.push(reactor.get_datas()[0]);
-    reactor.step_euler();
-    plot(t,p);
-
-    frame += 1;
-    if (frame > 1000) {
-    // if (false) {
-        console.log(p);
-    } else {
-        requestAnimationFrame(loop);
+        // ---
+        t.push(reactor.time);
+        p.push(reactor.get_datas()[0]);
+        reactor.step_euler();
+        plot(t,p);
     }
+
+    requestAnimationFrame(loop);
 }
 
 // main
