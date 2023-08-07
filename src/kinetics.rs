@@ -100,8 +100,8 @@ impl ReactorPWR {
             power: 1e2,
             precursors: [0.0; 6],
             reactivity: 0.0,
-            temp_fuel: 0.0,
-            temp_coolant: 0.0,
+            temp_fuel:    25.0 + 273.15,
+            temp_coolant: 25.0 + 273.15,
         };
         let fuel_coolant_heat_transfer_coefficient = 0.0;
         let coolant_inlet_temperature = 0.0;

@@ -5,6 +5,8 @@ const ctx = canvas.getContext('2d');
 const extreactivity_slider = document.getElementById('ext_reactivitySlider');
 const span_extreactivity = document.getElementById('ext_reactivityValue');
 const span_reactiviry = document.getElementById('reactivityValue');
+const span_power = document.getElementById('powerValue');
+const span_Tfuel = document.getElementById('TfuelValue');
 
 // create function that given array x and y plot them on canvas
 function plot(x, y) {
@@ -38,7 +40,16 @@ function loop(){
         ext_reactivity = slider_value;
         reactor.set_external_reactivity(ext_reactivity);
     }
-    // update the reactivity text
+    // update the text
+    //struct ReactorPWRData {
+    //     0   : power,
+    //     1:6 : precursors,
+    //     7   : reactivity,
+    //     8   : temp_fuel,
+    //     9   : temp_coolant,
+    // }
+    span_power.innerHTML = reactor.get_datas()[0];
+    span_Tfuel.innerHTML = reactor.get_datas()[8];
     span_extreactivity.innerHTML = ext_reactivity;
     span_reactiviry.innerHTML = reactor.get_datas()[7];
 
