@@ -70,25 +70,32 @@ pub struct ReactorPWR {
     // const temperature
     alpha_fuel: f64,
     alpha_coolant: f64,
-    // coolant
+    // heat transfers
+    mass_fuel : f64,
+    heat_capacity_fuel : f64,
+    mass_coolant : f64,
+    heat_capacity_coolant : f64,
+    convective_heat_transfer_coefficient : f64,
+    coolant_inlet_temperature : f64,
+    coolant_mass_flow_rate : f64,
 }
 
 #[wasm_bindgen]
 impl ReactorPWR {
     // initialize
     #[wasm_bindgen(constructor)]
-    pub fn new(dt : f64, excess_reactivity : f64) -> Self {
+    pub fn new(dt : f64, excess_reactivity : f64,
+        alpha_fuel : f64, alpha_coolant : f64,
+        mass_fuel : f64, mass_coolant : f64,
+        heat_capacity_fuel : f64, heat_capacity_coolant : f64,
+        ) -> Self {
         // for now, hardcode the value
         let beta = [0.000215, 0.001424, 0.001274, 0.002568, 0.000748, 0.000273];
         let lambda = [0.0124, 0.0305, 0.111, 0.301, 1.14, 3.01];
         let time = 0.0;
-        // let dt   = 1e-3;
-        let Lambda = lambda.iter().sum();
+        let Lambda = 20e-3;
         let Beta = beta.iter().sum();
-        // let excess_reactivity = 0.0;
         let external_reactivity = 0.0;
-        let alpha_fuel = 0.0;
-        let alpha_coolant = 0.0;
         let data = ReactorPWRData {
             neutron: 1e2,
             precursors: [0.0; 6],
@@ -96,9 +103,14 @@ impl ReactorPWR {
             temp_fuel: 0.0,
             temp_coolant: 0.0,
         };
+        let convective_heat_transfer_coefficient = 0.0;
+        let coolant_inlet_temperature = 0.0;
+        let coolant_mass_flow_rate = 0.0;
         ReactorPWR {
             data, time, dt, beta, Beta, lambda, Lambda,
             excess_reactivity, external_reactivity, alpha_fuel, alpha_coolant,
+            mass_fuel, heat_capacity_fuel, mass_coolant, heat_capacity_coolant,
+            convective_heat_transfer_coefficient, coolant_inlet_temperature, coolant_mass_flow_rate,
         }
     }
 

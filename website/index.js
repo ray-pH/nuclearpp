@@ -59,9 +59,11 @@ function loop(){
 
 // main
 const dt = 1e-3;
-const excess_reactivity = 0;
+const excess_reactivity = 0.0;
+const alpha_fuel = 0.0;
+const alpha_coolant = 0.0;
 init().then(() => {
-    reactor = new ReactorPWR(dt, excess_reactivity);
+    reactor = new ReactorPWR(dt, excess_reactivity, alpha_fuel, alpha_coolant);
     loop();
 });
 
