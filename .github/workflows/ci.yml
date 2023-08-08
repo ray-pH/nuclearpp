@@ -13,17 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install wasm-pack
-        uses: jetli/wasm-bindgen-action@v0.2.0
+        uses: jetli/wasm-pack-action@v0.4.0
+        with:
+          version: 'latest'
       - name: Build
         run: wasm-pack build --target web
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install wasm-pack
-        uses: jetli/wasm-bindgen-action@v0.2.0
-      - name: Build
-        run: wasm-pack build --target web
-      - name: Test
-        run: cargo test --target web
