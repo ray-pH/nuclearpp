@@ -1,0 +1,14 @@
+body {
+    background-color: #111111;
+    color: #ffffff;
+}
+
+#diagram-container {
+    width: 200px;
+    height: 200px;
+    /* background-color: #333333; */
+    position: relative;
+}
+.reactor-svg {
+    position: absolute;
+}

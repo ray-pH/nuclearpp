@@ -8,7 +8,7 @@
 
         <!-- <link rel="shortcut icon" href="./favicon.ico?" type="image/x-icon"> -->
         <!-- <link rel="icon" href="./favicon.ico?" type="image/x-icon"> -->
-        <!-- <link rel="stylesheet" href="./style.css"> -->
+        <link rel="stylesheet" href="./style.css">
 
         <!-- <meta property="og:image" content="https://raw.githubusercontent.com/ray-pH/pixelPhysics/main/img/pxpy.png"/> -->
         <!-- <meta property="og:description" content="Grid Based Physics Simulation"/> -->
@@ -18,9 +18,16 @@
         <script type="module" src="./index.js"></script>
     </head>
     <body>
-        <canvas class="plotcanvas" id="canvas" width="400px" height="400px"></canvas>
+        <div class="svg-container" id="diagram-container" style="float:left">
+            <img src="../assets/reactor.svg" id="reactor-svg" alt="reactor" class="reactor-svg">
+            <img src="../assets/rod.svg"     id="rod-svg" alt="rod" class="reactor-svg">
+        </div>
+        <div class="graph-container" style="float:left">
+            <canvas class="plotcanvas" id="canvas" width="400px" height="400px"></canvas>
+            <br>
+        </div>
         <br>
-        <button id="pauseButton">Pause</button>
+        <button id="pauseButton">Pause</button> <br>
         power : <span id="powerValue"></span> Wt <br>
         Tfuel : <span id="TfuelValue"></span>
         <br>
