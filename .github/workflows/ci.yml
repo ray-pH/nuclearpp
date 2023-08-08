@@ -1,0 +1,29 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install wasm-pack
+        uses: jetli/wasm-bindgen-action@v0.2.0
+      - name: Build
+        run: wasm-pack build --target web
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install wasm-pack
+        uses: jetli/wasm-bindgen-action@v0.2.0
+      - name: Build
+        run: wasm-pack build --target web
+      - name: Test
+        run: cargo test --target web
