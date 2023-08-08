@@ -1,0 +1,14 @@
+{
+  "name": "nuclearpp",
+  "version": "0.1.0",
+  "files": [
+    "nuclearpp_bg.wasm",
+    "nuclearpp.js",
+    "nuclearpp.d.ts"
+  ],
+  "module": "nuclearpp.js",
+  "types": "nuclearpp.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
