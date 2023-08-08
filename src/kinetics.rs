@@ -167,5 +167,11 @@ impl ReactorPWR {
         self.data = next_data;
         self.time += self.dt;
     }
+
+    pub fn step_euler_n(&mut self, n : u32){
+        for _ in 0..n {
+            self.step_euler();
+        }
+    }
 }
 

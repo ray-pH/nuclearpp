@@ -96,7 +96,7 @@ function loop(){
         // ---
         t.push(reactor.time);
         p.push(reactor.get_datas()[0]);
-        reactor.step_euler();
+        reactor.step_euler_n(10);
         plot(t,p);
     }
 
