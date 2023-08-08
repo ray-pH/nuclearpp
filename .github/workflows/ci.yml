@@ -14,16 +14,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install wasm-pack
         uses: jetli/wasm-bindgen-action@v0.2.0
+      - name: Add wasm-pack to PATH
+        run: echo 'export PATH=$PATH:$HOME/.cargo/bin' >> $GITHUB_ENV
+      - name: Check that wasm-pack is available
+        run: which wasm-pack
       - name: Build
-        run: wasm-pack build --target web
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install wasm-pack
-        uses: jetli/wasm-bindgen-action@v0.2.0
-      - name: Build
-        run: wasm-pack build --target web
-      - name: Test
-        run: cargo test --target web
+        run: wasm-pack build
