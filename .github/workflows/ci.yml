@@ -11,21 +11,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Install wasm-pack
         uses: jetli/wasm-pack-action@v0.4.0
         with:
           version: 'latest'
       - name: Build
         run: wasm-pack build --target web
-      # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
-      - name: Add .nojekyll file
-        run: touch ${{ env.PUBLISH_DIR }}/.nojekyll
-      - name: Commit to GitHub pages Repo
-        if: success()
-        uses: crazy-max/ghaction-github-pages@v1.5.1
-        with:
-          target_branch: gh-pages
-          build_dir: ${{ env.PUBLISH_DIR }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+ # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
