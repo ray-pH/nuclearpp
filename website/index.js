@@ -67,16 +67,7 @@ function update_diagram(ext_reactivity) {
     svg_rod.style.top = rod_y + 'px';
 }
 
-function loop(){
-    if (!paused){
-        // update ext_reactivity from slider
-        let slider_value = extreactivity_slider.value;
-        if (slider_value != ext_reactivity) {
-            ext_reactivity = slider_value;
-            reactor.set_external_reactivity(ext_reactivity);
-        }
-        update_diagram(ext_reactivity);
-
+function update_text(ext_reactivity) {
         // update the text
         //struct ReactorPWRData {
         //     0   : power,
@@ -89,6 +80,18 @@ function loop(){
         span_Tfuel.innerHTML = reactor.get_datas()[8];
         span_extreactivity.innerHTML = ext_reactivity;
         span_reactiviry.innerHTML = reactor.get_datas()[7];
+}
+
+function loop(){
+    if (!paused){
+        // update ext_reactivity from slider
+        let slider_value = extreactivity_slider.value;
+        if (slider_value != ext_reactivity) {
+            ext_reactivity = slider_value;
+            reactor.set_external_reactivity(ext_reactivity);
+        }
+        update_diagram(ext_reactivity);
+        update_text(ext_reactivity);
 
         // ---
         t.push(reactor.time);
