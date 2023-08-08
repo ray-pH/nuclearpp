@@ -84,7 +84,7 @@ pub struct ReactorPWR {
 impl ReactorPWR {
     // initialize
     #[wasm_bindgen(constructor)]
-    pub fn new(dt : f64, excess_reactivity : f64,
+    pub fn new(initial_power : f64, dt : f64, excess_reactivity : f64,
         alpha_fuel : f64, alpha_coolant : f64,
         mass_fuel : f64, mass_coolant : f64,
         heat_capacity_fuel : f64, heat_capacity_coolant : f64,
@@ -97,7 +97,7 @@ impl ReactorPWR {
         let Beta = beta.iter().sum();
         let external_reactivity = 0.0;
         let data = ReactorPWRData {
-            power: 1e2,
+            power: initial_power,
             precursors: [0.0; 6],
             reactivity: 0.0,
             temp_fuel:    25.0 + 273.15,
